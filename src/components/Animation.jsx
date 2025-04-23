@@ -41,6 +41,7 @@ const AchievementsPage = () => {
     useEffect(() => {
         // Create particles background with improved variety
         const createParticles = () => {
+            if (typeof window === 'undefined') return; // Guard for SSR
             const particlesContainer = document.getElementById('particles-container');
             if (!particlesContainer) return;
             
@@ -81,9 +82,11 @@ const AchievementsPage = () => {
 
         // Enhanced scroll effect with smoother transitions
         const handleScroll = () => {
+            if (typeof window === 'undefined') return; // Guard for SSR
+            
             const scrollPosition = window.scrollY;
             const windowHeight = window.innerHeight;
-            const documentHeight = document.body.scrollHeight;
+            const documentHeight = document.documentElement.scrollHeight;
             
             // Calculate scroll percentage with easing
             const scrollPercentage = Math.min(
@@ -123,15 +126,18 @@ const AchievementsPage = () => {
             });
         };
 
-        createParticles();
-        window.addEventListener('scroll', handleScroll);
-        
-        // Trigger initial check
-        setTimeout(handleScroll, 100);
-        
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        // Only run on client side
+        if (typeof window !== 'undefined') {
+            createParticles();
+            window.addEventListener('scroll', handleScroll);
+            
+            // Trigger initial check
+            setTimeout(handleScroll, 100);
+            
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            };
+        }
     }, []);
 
     return (

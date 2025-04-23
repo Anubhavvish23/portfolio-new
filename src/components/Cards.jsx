@@ -5,15 +5,28 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('skills');
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const canvasRef = useRef(null);
   const parallaxRef = useRef(null);
   
+  // Initialize dimensions on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    }
+  }, []);
+
   // Track mouse position for parallax effects
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleMouseMove = (e) => {
       setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight
+        x: e.clientX / dimensions.width,
+        y: e.clientY / dimensions.height
       });
     };
     
@@ -21,18 +34,20 @@ const Portfolio = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [dimensions]);
   
   // Matrix rain effect
   useEffect(() => {
+    if (typeof window === 'undefined' || !canvasRef.current) return;
+    
     setIsLoaded(true);
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
     // Setting canvas dimensions
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
     
     // Characters for matrix rain
     const chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -98,8 +113,17 @@ const Portfolio = () => {
     
     // Handle window resize
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      if (typeof window === 'undefined') return;
+      
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+      
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+      }
     };
     
     window.addEventListener('resize', handleResize);
@@ -109,7 +133,7 @@ const Portfolio = () => {
       clearInterval(interval);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [dimensions]);
 
   // Sample data - customize with your own information
   const certifications = [

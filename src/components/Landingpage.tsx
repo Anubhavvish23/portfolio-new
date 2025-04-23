@@ -36,6 +36,8 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!mouseMoveRef.current || !auraRef.current) return;
 

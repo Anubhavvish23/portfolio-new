@@ -232,17 +232,36 @@ export default function SkillsShowcase() {
 // GridBackground Component
 function GridBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    // Initial dimensions
+    updateDimensions();
+
+    // Update dimensions on resize
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || typeof window === 'undefined') return
 
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      canvas.width = dimensions.width
+      canvas.height = dimensions.height
       drawGrid()
     }
 
@@ -273,14 +292,9 @@ function GridBackground() {
     }
 
     resizeCanvas()
-    window.addEventListener("resize", resizeCanvas)
+  }, [dimensions])
 
-    return () => {
-      window.removeEventListener("resize", resizeCanvas)
-    }
-  }, [])
-
-  return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full -z-10" />
+  return <canvas ref={canvasRef} className="fixed inset-0 opacity-20 pointer-events-none" />
 }
 
 // AnimatedParticles Component
