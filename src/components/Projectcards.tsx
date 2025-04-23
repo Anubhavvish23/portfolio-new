@@ -297,8 +297,21 @@ function GridBackground() {
   return <canvas ref={canvasRef} className="fixed inset-0 opacity-20 pointer-events-none" />
 }
 
-// AnimatedParticles Component
 function AnimatedParticles() {
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const updateSize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    }
+
+    updateSize()
+    window.addEventListener("resize", updateSize)
+    return () => window.removeEventListener("resize", updateSize)
+  }, [])
+
   return (
     <div className="fixed inset-0 -z-5">
       {Array.from({ length: 30 }).map((_, i) => (
@@ -306,21 +319,21 @@ function AnimatedParticles() {
           key={i}
           className="absolute rounded-full bg-[#00FF00]"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
             opacity: 0.2 + Math.random() * 0.3,
             scale: 0.5 + Math.random() * 1.5,
           }}
           animate={{
             x: [
-              Math.random() * window.innerWidth,
-              Math.random() * window.innerWidth,
-              Math.random() * window.innerWidth,
+              Math.random() * windowSize.width,
+              Math.random() * windowSize.width,
+              Math.random() * windowSize.width,
             ],
             y: [
-              Math.random() * window.innerHeight,
-              Math.random() * window.innerHeight,
-              Math.random() * window.innerHeight,
+              Math.random() * windowSize.height,
+              Math.random() * windowSize.height,
+              Math.random() * windowSize.height,
             ],
             opacity: [0.2, 0.5, 0.2],
           }}
