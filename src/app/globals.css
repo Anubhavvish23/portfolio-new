@@ -1,0 +1,859 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes path-animation {
+  0% {
+    stroke-dasharray: 0 1000;
+  }
+  100% {
+    stroke-dasharray: 1000 0;
+  }
+}
+
+.path-animation {
+  animation: path-animation 2s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.light {
+  transition: all 0.5s ease;
+  transform: translate(
+    calc(var(--mouse-x, 0) * 0.1),
+    calc(var(--mouse-y, 0) * 0.1)
+  );
+}
+
+/* Background grid pattern */
+.bg-grid {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+/* Noise texture */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Floating animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 8s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mouse following aura */
+.aura-container {
+  position: fixed;
+  pointer-events: none;
+  transform: translate(calc(var(--mouse-x, 0) - 50%), calc(var(--mouse-y, 0) - 50%));
+  transition: transform 0.2s ease-out;
+}
+
+.aura {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+
+.aura-outer {
+  width: 1000px;
+  height: 1000px;
+  background: radial-gradient(circle at center, rgba(0, 255, 0, 0.15) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.aura-middle {
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle at center, rgba(0, 255, 0, 0.2) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite 0.5s;
+}
+
+.aura-inner {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, rgba(0, 255, 0, 0.25) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite 1s;
+}
+
+/* Moving lines */
+.moving-line {
+  position: absolute;
+  width: 1px;
+  height: 100px;
+  background: linear-gradient(180deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+  animation: moveLine var(--duration) linear infinite;
+  animation-delay: var(--delay);
+  left: var(--start-x);
+  top: var(--start-y);
+  transform-origin: 50% 0%;
+}
+
+@keyframes moveLine {
+  0% {
+    transform: translateY(-100%) rotate(45deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(100vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+  overflow-x: hidden;
+}
+
+/* Background Animation */
+.bg-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-line {
+  position: absolute;
+  background-color: rgba(0, 255, 0, 0.1);
+  height: 1px;
+  width: 100px;
+  transform-origin: left;
+  animation: bgLineMove 15s infinite linear;
+}
+
+@keyframes bgLineMove {
+  0% {
+    transform: rotate(var(--rotation)) translateX(-100px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(var(--rotation)) translateX(calc(100vw + 200px));
+    opacity: 0;
+  }
+}
+
+/* Code Animation */
+.code-animation {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.code-line {
+  height: 12px;
+  background-color: #00ff00;
+  border-radius: 6px;
+  opacity: 0.7;
+  animation: codeLine 2s infinite alternate;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.code-line:nth-child(1) {
+  width: 70%;
+  animation-delay: 0s;
+}
+
+.code-line:nth-child(2) {
+  width: 90%;
+  animation-delay: 0.3s;
+}
+
+.code-line:nth-child(3) {
+  width: 50%;
+  animation-delay: 0.6s;
+}
+
+.code-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: codeParticle 3s infinite;
+}
+
+.code-particle:nth-child(4) {
+  top: 20%;
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.code-particle:nth-child(5) {
+  top: 60%;
+  left: 70%;
+  animation-delay: 1s;
+}
+
+.code-particle:nth-child(6) {
+  top: 80%;
+  left: 40%;
+  animation-delay: 2s;
+}
+
+@keyframes codeLine {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(20px);
+  }
+}
+
+@keyframes codeParticle {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(30px, -30px);
+    opacity: 0;
+  }
+}
+
+/* App Animation */
+.app-animation {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-screen {
+  width: 100px;
+  height: 180px;
+  border: 3px solid #00ff00;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.app-dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: appDot 3s infinite;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+.app-notification {
+  position: absolute;
+  width: 80%;
+  height: 10px;
+  background-color: rgba(0, 255, 0, 0.3);
+  border-radius: 5px;
+  animation: appNotification 2s infinite;
+}
+
+.app-notification:nth-child(3) {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.app-notification:nth-child(4) {
+  top: 40%;
+  left: 10%;
+  animation-delay: 0.5s;
+}
+
+.app-notification:nth-child(5) {
+  top: 60%;
+  left: 10%;
+  animation-delay: 1s;
+}
+
+@keyframes appDot {
+  0% {
+    top: 10%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+  }
+  25% {
+    top: 50%;
+    left: 10%;
+    width: 20px;
+    height: 20px;
+  }
+  50% {
+    top: 90%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+  }
+  75% {
+    top: 50%;
+    left: 90%;
+    width: 20px;
+    height: 20px;
+  }
+  100% {
+    top: 10%;
+    left: 50%;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@keyframes appNotification {
+  0% {
+    opacity: 0.2;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scaleX(0.8);
+  }
+}
+
+/* AI Animation */
+.ai-animation {
+  position: relative;
+  width: 80%;
+  height: 80%;
+}
+
+.ai-node {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.ai-node:nth-child(1) {
+  top: 30%;
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.ai-node:nth-child(2) {
+  top: 70%;
+  left: 30%;
+  animation-delay: 0.5s;
+}
+
+.ai-node:nth-child(3) {
+  top: 50%;
+  left: 70%;
+  animation-delay: 1s;
+}
+
+.ai-connection {
+  position: absolute;
+  background-color: #00ff00;
+  opacity: 0.5;
+  animation: connectionPulse 2s infinite;
+}
+
+.ai-connection:nth-child(4) {
+  width: 2px;
+  height: 40%;
+  top: 30%;
+  left: 30%;
+  transform: rotate(90deg);
+  animation-delay: 0.2s;
+}
+
+.ai-connection:nth-child(5) {
+  width: 2px;
+  height: 50%;
+  top: 40%;
+  left: 50%;
+  transform: rotate(45deg);
+  animation-delay: 0.7s;
+}
+
+.ai-particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  opacity: 0;
+  animation: aiParticle 3s infinite;
+}
+
+.ai-particle:nth-child(6) {
+  top: 30%;
+  left: 30%;
+  animation-delay: 0.2s;
+}
+
+.ai-particle:nth-child(7) {
+  top: 70%;
+  left: 30%;
+  animation-delay: 1.2s;
+}
+
+.ai-particle:nth-child(8) {
+  top: 50%;
+  left: 70%;
+  animation-delay: 2.2s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes connectionPulse {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes aiParticle {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  80% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Embedded Systems Animation */
+.embedded-animation {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circuit-board {
+  width: 150px;
+  height: 150px;
+  border: 2px solid #00ff00;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.circuit-line {
+  position: absolute;
+  width: 60%;
+  height: 2px;
+  background-color: #00ff00;
+  top: 50%;
+  left: 20%;
+  animation: circuitPulse 2s infinite;
+}
+
+.circuit-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  top: 50%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  animation: circuitDot 2s infinite;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+.circuit-vertical {
+  position: absolute;
+  width: 2px;
+  height: 40%;
+  background-color: #00ff00;
+  top: 30%;
+  left: 30%;
+  animation: circuitPulse 3s infinite;
+  animation-delay: 0.5s;
+}
+
+.circuit-horizontal {
+  position: absolute;
+  width: 40%;
+  height: 2px;
+  background-color: #00ff00;
+  top: 30%;
+  left: 30%;
+  animation: circuitPulse 3s infinite;
+  animation-delay: 1s;
+}
+
+.circuit-dot-2 {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  top: 30%;
+  left: 70%;
+  animation: pulse 2s infinite;
+  animation-delay: 1.5s;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+}
+
+@keyframes circuitPulse {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes circuitDot {
+  0% {
+    left: 20%;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.9);
+  }
+  100% {
+    left: 80%;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+  }
+}
+
+/* Python Animation */
+.python-animation {
+  position: relative;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.python-snake {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.snake-head {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  top: 50%;
+  left: 70%;
+  animation: snakeHead 4s infinite;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+}
+
+.snake-body {
+  position: absolute;
+  width: 60px;
+  height: 10px;
+  background-color: #00ff00;
+  border-radius: 5px;
+  top: 50%;
+  left: 40%;
+  transform: translateY(-50%);
+  animation: snakeBody 4s infinite;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.snake-tail {
+  position: absolute;
+  width: 30px;
+  height: 8px;
+  background-color: #00ff00;
+  border-radius: 4px;
+  top: 50%;
+  left: 20%;
+  transform: translateY(-50%);
+  animation: snakeTail 4s infinite;
+  opacity: 0.7;
+}
+
+.python-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: pythonParticle 2s infinite;
+}
+
+.python-particle:nth-child(4) {
+  top: 40%;
+  left: 60%;
+  animation-delay: 0.5s;
+}
+
+.python-particle:nth-child(5) {
+  top: 60%;
+  left: 40%;
+  animation-delay: 1s;
+}
+
+.python-particle:nth-child(6) {
+  top: 30%;
+  left: 50%;
+  animation-delay: 1.5s;
+}
+
+@keyframes snakeHead {
+  0% {
+    top: 50%;
+    left: 70%;
+    width: 20px;
+    height: 20px;
+  }
+  25% {
+    top: 30%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+  }
+  50% {
+    top: 50%;
+    left: 30%;
+    width: 20px;
+    height: 20px;
+  }
+  75% {
+    top: 70%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+  }
+  100% {
+    top: 50%;
+    left: 70%;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@keyframes snakeBody {
+  0% {
+    top: 50%;
+    left: 40%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 60px;
+  }
+  25% {
+    top: 40%;
+    left: 30%;
+    transform: translateY(-50%) rotate(-45deg);
+    width: 50px;
+  }
+  50% {
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 60px;
+  }
+  75% {
+    top: 60%;
+    left: 30%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 50px;
+  }
+  100% {
+    top: 50%;
+    left: 40%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 60px;
+  }
+}
+
+@keyframes snakeTail {
+  0% {
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%) rotate(0deg);
+  }
+  25% {
+    top: 45%;
+    left: 15%;
+    transform: translateY(-50%) rotate(-30deg);
+  }
+  50% {
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%) rotate(0deg);
+  }
+  75% {
+    top: 55%;
+    left: 15%;
+    transform: translateY(-50%) rotate(30deg);
+  }
+  100% {
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%) rotate(0deg);
+  }
+}
+
+@keyframes pythonParticle {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 13, 13, 13;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  overflow-x: hidden;
+}
+
